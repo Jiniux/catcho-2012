@@ -4,10 +4,8 @@ namespace osuserver2012.Packets.In
 {
     public class NoOp : IPacketIn
     {
-        private Stream _stream;
-        
-        public void ReadPacket() {}
+        public void ReadPacket(Stream stream) {}
 
-        public void ProcessPacket(Context ctx, Stream stream) {}
+        public void ProcessPacket(Context ctx) {}
     }
 }

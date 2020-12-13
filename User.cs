@@ -98,7 +98,7 @@ namespace osuserver2012.MySql
                 for (;;)
                 {
                     if (_networkStream.CanRead && _networkStream.DataAvailable)
-                        (await IPacketIn.ReadHeaderAsync(_networkStream, ctx)).ProcessPacket(ctx, _networkStream);
+                        (await IPacketIn.ReadHeaderAsync(_networkStream)).ProcessPacket(ctx);
                     await Task.Delay(1, ctx.Token);
                 }
             }

@@ -9,7 +9,7 @@ namespace osuserver2012.Packets
 {
     interface IPacketIn
     {
-        public static async Task<IPacketIn> ReadHeaderAsync(Stream stream, Context ctx)
+        public static async Task<IPacketIn> ReadHeaderAsync(Stream stream)
         {
             ushort id;
             bool compress;
@@ -24,7 +24,7 @@ namespace osuserver2012.Packets
             // if (id > 100) => do something to block it cuz it isnt a packet
             
             var buffer = new byte[length];
-            await stream.ReadAsync(buffer, 0, buffer.Length);
+            await stream.ReadAsync(buffer.AsMemory());
             
             Console.WriteLine(id);
 
@@ -48,11 +48,15 @@ namespace osuserver2012.Packets
                 */
                 _ => new Packets.In.NoOp()
             };
+
+
+            using (var ms = new MemoryStream(buffer))
+                packet.ReadPacket(stream);
             
             return packet;
         }
 
-        void ReadPacket();
-        void ProcessPacket(Context ctx, Stream stream);
+        void ReadPacket(Stream stream);
+        void ProcessPacket(Context ctx);
     }
 }

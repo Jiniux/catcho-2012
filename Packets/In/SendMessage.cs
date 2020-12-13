@@ -4,13 +4,11 @@ namespace osuserver2012.Packets.In
 {
     public class SendMessage : IPacketIn
     {
-        private Stream _stream;
-        
         public Message Message = new Message();
 
-        public void ReadPacket()
+        public void ReadPacket(Stream stream)
         {
-            BinaryReader reader = new BinaryReader(_stream);
+            BinaryReader reader = new BinaryReader(stream);
 
             reader.ReadBytes(10);
             Message.Contents = reader.ReadString();
@@ -18,12 +16,8 @@ namespace osuserver2012.Packets.In
             Message.Target = reader.ReadString();
         }
 
-        public void ProcessPacket(Context ctx, Stream stream)
+        public void ProcessPacket(Context ctx)
         {
-            _stream = stream;
-            
-            ReadPacket();
-            
             Message.Sender = ctx.User.username;
             
             ctx.Server.BroadcastPacket(new Packets.Out.SendMessage { Message = Message });

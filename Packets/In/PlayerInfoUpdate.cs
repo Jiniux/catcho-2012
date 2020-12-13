@@ -6,8 +6,6 @@ namespace osuserver2012.Packets.In
 {
     public class PlayerInfoUpdate : IPacketIn
     {
-        private Stream _stream;
-        
         public Status Status { get; set; }
         public string Action { get; set; }
         public string ActionMD5 { get; set; }
@@ -15,9 +13,9 @@ namespace osuserver2012.Packets.In
         public Gamemode Gamemode { get; set; }
         public int MapID { get; set; }
 
-        public void ReadPacket()
+        public void ReadPacket(Stream stream)
         {
-            using BinaryReader reader = new BinaryReader(_stream);
+            using BinaryReader reader = new BinaryReader(stream);
             
             Status = (Status)reader.ReadByte();
             reader.ReadByte();
@@ -29,12 +27,8 @@ namespace osuserver2012.Packets.In
             MapID = reader.ReadInt32();
         }
 
-        public void ProcessPacket(Context ctx, Stream stream)
+        public void ProcessPacket(Context ctx)
         {
-            _stream = stream;
-            
-            ReadPacket();
-            
             ctx.PlayerInfo.Status = Status;
             ctx.PlayerInfo.Action = Action;
             ctx.PlayerInfo.ActionMD5 = ActionMD5;

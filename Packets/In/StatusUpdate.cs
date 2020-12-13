@@ -7,16 +7,10 @@ namespace osuserver2012.Packets.In
 {
     public class StatusUpdate : IPacketIn
     {
-        private Stream _stream;
-        
-        public void ReadPacket() {}
+        public void ReadPacket(Stream stream) {}
 
-        public void ProcessPacket(Context ctx, Stream stream)
+        public void ProcessPacket(Context ctx)
         {
-            _stream = stream;
-            
-            ReadPacket();
-            
             var query = ctx.Database.Get("select * from (select *, ROW_NUMBER() OVER(PARTITION BY rankedscore) AS 'rank' from osu_users) t WHERE username = @username;", new[] {
                 new MySqlParameter("@username", ctx.User.username),
             });

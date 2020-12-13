@@ -5,24 +5,18 @@ namespace osuserver2012.Packets.In
 {
     public class ChannelJoin : IPacketIn
     {
-        private Stream _stream;
-
         public string ChannelName { get; set; }
 
-        public void ReadPacket()
+        public void ReadPacket(Stream stream)
         {
-            BinaryReader reader = new BinaryReader(_stream);
+            BinaryReader reader = new BinaryReader(stream);
 
             reader.ReadByte();
             ChannelName = reader.ReadString();
         }
 
-        public void ProcessPacket(Context ctx, Stream stream)
+        public void ProcessPacket(Context ctx)
         {
-            _stream = stream;
-            
-            ReadPacket();
-            
             ctx.User.QueuePacket(new Packets.Out.ChannelJoin() { ChannelName = ChannelName });
         }
     }
